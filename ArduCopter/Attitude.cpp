@@ -200,10 +200,10 @@ float Copter::get_pilot_desired_climb_rate(float throttle_control)
     // check throttle is above, below or in the deadband
     if (throttle_control < deadband_bottom) {
         // below the deadband
-        desired_rate = g.pilot_velocity_z_max * (throttle_control-deadband_bottom) / deadband_bottom;
+        desired_rate = g.pilot_velocity_z_max_dn * (throttle_control-deadband_bottom) / deadband_bottom;
     }else if (throttle_control > deadband_top) {
         // above the deadband
-        desired_rate = g.pilot_velocity_z_max * (throttle_control-deadband_top) / (1000.0f-deadband_top);
+        desired_rate = g.pilot_velocity_z_max_up * (throttle_control-deadband_top) / (1000.0f-deadband_top);
     }else{
         // must be in the deadband
         desired_rate = 0.0f;

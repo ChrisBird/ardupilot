@@ -99,7 +99,7 @@ public:
         k_param_throttle_accel_enabled,     // deprecated - remove
         k_param_wp_yaw_behavior,
         k_param_acro_trainer,
-        k_param_pilot_velocity_z_max,
+        k_param_pilot_velocity_z_max,       // deprecated - remove
         k_param_circle_rate,                // deprecated - remove
         k_param_rangefinder_gain,
         k_param_ch8_option,
@@ -368,6 +368,12 @@ public:
 
         // 254,255: reserved
 
+        //
+        // Pilot_Velocity Extras - 260
+        //
+        k_param_pilot_velocity_z_max_up = 260,
+        k_param_pilot_velocity_z_max_dn = 261,
+
         // the k_param_* space is 9-bits in size
         // 511: reserved
     };
@@ -414,8 +420,11 @@ public:
     AP_Int32        rtl_loiter_time;
     AP_Int16        land_speed;
     AP_Int16        land_speed_high;
-    AP_Int16        pilot_velocity_z_max;        // maximum vertical velocity the pilot may request
     AP_Int16        pilot_accel_z;               // vertical acceleration the pilot may request
+
+    // Additional pilot velocity items
+    AP_Int16        pilot_velocity_z_max_up;     // maximum vertical ascending velocity the pilot may request
+    AP_Int16        pilot_velocity_z_max_dn;     // maximum vertical descending velocity the pilot may request
 
     // Throttle
     //
