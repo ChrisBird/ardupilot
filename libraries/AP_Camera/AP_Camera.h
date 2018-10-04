@@ -75,6 +75,12 @@ public:
     // set if vehicle is in AUTO mode
     void set_is_auto_mode(bool enable) { _is_in_auto_mode = enable; }
 
+    enum camera_types
+    {
+        CAMERA_TYPE_STD,
+        CAMERA_TYPE_BMMCC
+     };
+
 private:
 
     static AP_Camera *_singleton;
@@ -85,8 +91,10 @@ private:
     AP_Int16        _servo_on_pwm;      // PWM value to move servo to when shutter is activated
     AP_Int16        _servo_off_pwm;     // PWM value to move servo to when shutter is deactivated
     uint8_t         _trigger_counter;   // count of number of cycles shutter has been held open
+    uint8_t         _trigger_counter_cam_function;   // count of number of cycles alternative camera function has been held open
     AP_Relay       *_apm_relay;         // pointer to relay object from the base class Relay.
     AP_Int8         _auto_mode_only;    // if 1: trigger by distance only if in AUTO mode.
+    AP_Int8         _type;              // Set the type of camera in use, will open additional parameters if set
     bool            _is_in_auto_mode;   // true if in AUTO mode
 
     void            servo_pic();        // Servo operated camera

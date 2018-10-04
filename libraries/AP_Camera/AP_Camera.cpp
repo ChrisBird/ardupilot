@@ -100,6 +100,13 @@ const AP_Param::GroupInfo AP_Camera::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("AUTO_ONLY",  10, AP_Camera, _auto_mode_only, 0),
 
+    // @Param: TYPE
+    // @DisplayName: Type of camera (0: None, 1: BMMCC)
+    // @Description: Set the camera type that is being used, certain cameras have custom functions that need further configuration, this enables that.
+    // @Values: 0:Default,1:BMMCC
+    // @User: Standard
+    AP_GROUPINFO("TYPE",  11, AP_Camera, _type, 0),
+
     AP_GROUPEND
 };
 
@@ -175,6 +182,17 @@ AP_Camera::trigger_pic_cleanup()
                 break;
         }
     }
+
+    if(_trigger_counter_cam_function) {
+            _trigger_counter_cam_function--;
+        } else {
+            switch (_type) {
+                case AP_Camera::CAMERA_TYPE_BMMCC:
+                    SRV_Channels::set_output_pwm(SRV_Channel::k_cam_iso, _servo_off_pwm);
+                    break;
+            }
+        }
+
 }
 
 /// decode deprecated MavLink message that controls camera.
@@ -210,6 +228,26 @@ void AP_Camera::configure(float shooting_mode, float shutter_speed, float apertu
 
     // send to all components
     GCS_MAVLINK::send_to_components(&msg);
+
+    if(_type == AP_Camera::CAMERA_TYPE_BMMCC)
+    {
+        // Set a trigger for the additional functions that are flip controlled (so far just ISO and Record Start / Stop use this method, will add others if required)
+        _trigger_counter_cam_function = constrain_int16(_trigger_duration*5,0,255);
+
+        // If the message contains non zero values then use them for the below functions
+        if (ISO > 0)
+            SRV_Channels::set_output_pwm(SRV_Channel::k_cam_iso, _servo_on_pwm);
+
+        if(aperture > 0)
+            SRV_Channels::set_output_pwm(SRV_Channel::k_cam_aperture, (int)aperture);
+
+        if(shutter_speed > 0)
+            SRV_Channels::set_output_pwm(SRV_Channel::k_cam_shutter_speed, (int)shutter_speed);
+
+        // Use the shooting mode PWM value for the BMMCC as the focus control - no need to modify or create a new MAVlink message type.
+        if(shooting_mode > 0)
+            SRV_Channels::set_output_pwm(SRV_Channel::k_cam_focus, (int)shooting_mode);
+    }
 }
 
 void AP_Camera::control(float session, float zoom_pos, float zoom_step, float focus_lock, float shooting_cmd, float cmd_id)
