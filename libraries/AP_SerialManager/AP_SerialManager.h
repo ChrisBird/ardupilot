@@ -105,6 +105,7 @@ public:
         SerialProtocol_Devo_Telem = 17,
         SerialProtocol_OpticalFlow = 18,
         SerialProtocol_Robotis = 19,
+        SerialProtocol_FrSky_SPort_Sensor = 20,
     };
 
     // get singleton instance

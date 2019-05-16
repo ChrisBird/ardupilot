@@ -59,6 +59,12 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
+// FrSky sensor support
+//
+#ifndef FRSKY_SENSOR_ENABLED
+  #define FRSKY_SENSOR_ENABLED ENABLED
+#endif
+
 // Advanced Failsafe support
 //
 

@@ -81,6 +81,7 @@
 #include <AP_BoardConfig/AP_BoardConfig.h>
 #include <AP_BoardConfig/AP_BoardConfig_CAN.h>
 #include <AP_Frsky_Telem/AP_Frsky_Telem.h>
+#include <AP_Frsky_Sensor/AP_Frsky_Sensor.h>
 #include <AP_OSD/AP_OSD.h>
 #include <AP_ServoRelayEvents/AP_ServoRelayEvents.h>
 
@@ -436,6 +437,11 @@ private:
     AP_BattMonitor battery{MASK_LOG_CURRENT,
                            FUNCTOR_BIND_MEMBER(&Plane::handle_battery_failsafe, void, const char*, const int8_t),
                            _failsafe_priorities};
+
+    // Frsky Sensors
+    #if FRSKY_SENSOR_ENABLED == ENABLED
+        AP_Frsky_Sensor frsky_sensor;
+    #endif
 
     // Airspeed Sensors
     AP_Airspeed airspeed;
